@@ -1,0 +1,51 @@
+{
+    "name": "daniele-athome/webisodes",
+    "description": "Webisodes",
+    "keywords": ["episodes", "webui", "frontend"],
+    "homepage": "https://github.com/daniele-athome/webisodes",
+    "type": "project",
+    "license": "GPL-3",
+    "support": {
+        "issues": "https://github.com/daniele-athome/webisodes/issues?state=open",
+        "wiki": "https://github.com/daniele-athome/webisodes/wiki",
+        "source": "https://github.com/daniele-athome/webisodes"
+    },
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.4.0",
+        "yiisoft/yii2": "~2.0.5",
+        "yiisoft/yii2-bootstrap": "~2.0.0",
+        "ezoterik/yii2-html5shiv-asset": "*",
+        "ezoterik/yii2-respond-asset": "*"
+    },
+    "require-dev": {
+        "yiisoft/yii2-debug": "~2.0.0",
+        "yiisoft/yii2-gii": "~2.0.0"
+    },
+    "config": {
+        "process-timeout": 1800
+    },
+    "scripts": {
+        "post-create-project-cmd": [
+            "yii\\composer\\Installer::postCreateProject"
+        ]
+    },
+    "extra": {
+        "yii\\composer\\Installer::postCreateProject": {
+            "setPermission": [
+                {
+                    "runtime": "0777",
+                    "web/assets": "0777",
+                    "yii": "0755"
+                }
+            ],
+            "generateCookieValidationKey": [
+                "config/web.php"
+            ]
+        },
+        "asset-installer-paths": {
+            "npm-asset-library": "vendor/npm",
+            "bower-asset-library": "vendor/bower"
+        }
+    }
+}
