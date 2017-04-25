@@ -16,7 +16,8 @@
         "yiisoft/yii2": "~2.0.5",
         "yiisoft/yii2-bootstrap": "~2.0.0",
         "ezoterik/yii2-html5shiv-asset": "*",
-        "ezoterik/yii2-respond-asset": "*"
+        "ezoterik/yii2-respond-asset": "*",
+        "google/apiclient": "^2.0@dev"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

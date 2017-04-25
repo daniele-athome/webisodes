@@ -17,36 +17,12 @@ class Trailer extends yii\db\ActiveRecord
     // 7 days
     const MAX_CHECK_TIME = 604800;
 
-    public static function setup()
-    {
-        // FIXME this won't work because schema name is not supported by Yii2 SQLite module
-        try {
-            static::getTableSchema();
-        }
-        catch (yii\base\InvalidConfigException $e) {
-            static::attachDatabase();
-            static::createSchema();
-        }
-    }
-
     /**
      * @return string the associated database table name
      */
     public static function tableName()
     {
         return 'support.trailers';
-    }
-
-    private static function attachDatabase()
-    {
-        $cmd = "ATTACH DATABASE '".dirname(__FILE__)."/../data/support.db' as support;";
-        static::getDb()->createCommand($cmd)->execute();
-    }
-
-    private static function createSchema()
-    {
-        $schema = 'CREATE TABLE IF NOT EXISTS support.trailers (episode_id INTEGER PRIMARY KEY NOT NULL, youtube_id TEXT, last_check INTEGER);';
-        static::getDb()->createCommand($schema)->execute();
     }
 
     /**

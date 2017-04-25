@@ -18,10 +18,10 @@ use yii;
  * @property string $fanart_path
  * @property string $poster_path
  * @property string $notes
- * @property int watched_count
- * @property int aired_count
- * @property int episodes_count
- * @property int seasons_count
+ * @property int watchedCount
+ * @property int airedCount
+ * @property int episodesCount
+ * @property int seasonsCount
  */
 class Show extends yii\db\ActiveRecord
 {
@@ -33,26 +33,54 @@ class Show extends yii\db\ActiveRecord
 		return 'shows';
 	}
 
-	/**
-	 * @return array relational rules.
-	 */
-	public function relations()
-	{
-	    // FIXME
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-            'episodes' => array(self::HAS_MANY, 'Episode', 'show_id', 'order'=>'season_number,episode_number'),
-            // watched count (without specials)
-			'watched_count' => array(self::STAT, 'Episode', 'show_id', 'condition' => 'watched<>0 and season_number > 0'),
-            // aired count (without specials)
-            'aired_count' => array(self::STAT, 'Episode', 'show_id', 'condition' => 'season_number > 0 and first_aired is not null and first_aired < strftime(\'%s\', \'now\')'),
-            // total episodes count (without specials)
-            'episodes_count' => array(self::STAT, 'Episode', 'show_id', 'condition' => 'season_number > 0'),
-            // seasons count (specials are season zero)
-            'seasons_count' => array(self::STAT, 'Episode', 'show_id', 'select' => 'max(season_number)'),
-		);
-	}
+	public function getEpisodes()
+    {
+        return $this->hasMany(Episode::className(), ['show_id' => '_id'])
+            ->orderBy('season_number,episode_number');
+    }
+
+    /**
+     * Seasons count (specials are season zero)
+     * @return int
+     */
+    public function getSeasonsCount()
+    {
+        return $this->getEpisodes()
+            ->max('season_number');
+    }
+
+    /**
+     * Total episodes count (without specials)
+     * @return int
+     */
+    public function getEpisodesCount()
+    {
+        return $this->getEpisodes()
+            ->andWhere('season_number > 0')
+            ->count();
+    }
+
+    /**
+     * Watched count (without specials)
+     * @return int
+     */
+    public function getWatchedCount()
+    {
+        return $this->getEpisodes()
+            ->andWhere('watched <> 0 and season_number > 0')
+            ->count();
+    }
+
+    /**
+     * Aired count (without specials)
+     * @return int
+     */
+    public function getAiredCount()
+    {
+        return $this->getEpisodes()
+            ->andWhere('season_number > 0 and first_aired is not null and first_aired < strftime(\'%s\', \'now\')')
+            ->count();
+    }
 
 	/**
 	 * @return array customized attribute labels (name=>label)
@@ -86,13 +114,10 @@ class Show extends yii\db\ActiveRecord
     }
 
     public function season($season) {
-	    // FIXME
-        $criteria=new CDbCriteria;
-        $criteria->compare('show_id', $this->_id);
-        $criteria->compare('season_number', $season);
-
-        return new CActiveDataProvider(Episode::model(), array(
-            'criteria'=>$criteria,
-        ));
+	    return new yii\data\ActiveDataProvider([
+	        'query' => Episode::find()
+                ->andFilterWhere(['show_id' => $this->_id, 'season_number' => $season]),
+            'pagination' => false,
+        ]);
     }
 }

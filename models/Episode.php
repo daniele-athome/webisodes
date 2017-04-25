@@ -30,12 +30,6 @@ class Episode extends yii\db\ActiveRecord
         return 'episodes';
     }
 
-    public function init()
-    {
-        Trailer::setup();
-        parent::init();
-    }
-
     public function getShow() {
         return $this->hasOne(Show::className(), ['_id' => 'show_id']);
     }
@@ -67,8 +61,7 @@ class Episode extends yii\db\ActiveRecord
     }
 
     public static function getSeasonsStat($show_id) {
-        // FIXME
-        return Yii::app()->db->createCommand()
+        return static::find()
             ->select(array(
                     'season_number',
                     'count(case watched when 0 then null else watched end) watched',
@@ -77,8 +70,8 @@ class Episode extends yii\db\ActiveRecord
             )
             ->from(self::tableName())
             ->where('show_id=:show', array(':show' => $show_id))
-            ->group('season_number')
-            ->queryAll();
+            ->groupBy('season_number')
+            ->all();
     }
 
     function getTrailerQuery() {

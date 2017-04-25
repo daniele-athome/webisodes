@@ -8,6 +8,7 @@ $config = [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'language' => 'en',
+    'sourceLanguage' => 'en',
     'defaultRoute' => 'dashboard/index',
     'components' => [
         'request' => [
@@ -41,6 +42,23 @@ $config = [
             ],
         ],
         */
+        'i18n' => [
+            'translations' => [
+                'default*' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    //'basePath' => '@app/messages',
+                    //'sourceLanguage' => 'en-US',
+                    'fileMap' => [
+                        'default' => 'default.php',
+                        'default/error' => 'error.php',
+                    ],
+                ],
+            ],
+        ],
+        'youtube' => [
+            'class' => 'app\components\Youtube',
+            'apiKey' => 'YOUTUBE-API-KEY',
+        ]
     ],
     'params' => $params,
 ];

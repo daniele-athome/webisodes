@@ -1,6 +1,7 @@
 <?php
 /* @var $this yii\web\View */
 /* @var $upcoming array */
+/* @var $uncompleted array */
 
 $this->title = 'Home';
 ?>
@@ -18,17 +19,15 @@ $this->title = 'Home';
 <div class="row">
 
     <div class="col-md-6">
-        <?php $this->render('_carousel', array('data' => $upcoming)); ?>
+        <?= $this->render('_carousel', array('data' => $upcoming)); ?>
     </div>
 
     <div class="col-md-6">
-        <?php /*$this->widget('zii.widgets.CListView', array(
+        <?= \yii\widgets\ListView::widget([
             'dataProvider'=>$uncompleted,
-            'summaryText'=>'',
-            'summaryCssClass'=>'hide',
-            'itemView'=>'application.views.show._view',
-            'enablePagination'=>false,
-        ));*/ ?>
+            'summary'=>'',
+            'itemView'=>'/show/_view',
+        ]) ?>
     </div>
 
 </div>
