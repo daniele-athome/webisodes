@@ -61,17 +61,16 @@ class Episode extends yii\db\ActiveRecord
     }
 
     public static function getSeasonsStat($show_id) {
-        return static::find()
-            ->select(array(
-                    'season_number',
-                    'count(case watched when 0 then null else watched end) watched',
-                    'count(case when (first_aired is not null and first_aired < strftime(\'%s\', \'now\')) then 1 else null end) aired',
-                    'count(*) total')
-            )
-            ->from(self::tableName())
-            ->where('show_id=:show', array(':show' => $show_id))
-            ->groupBy('season_number')
-            ->all();
+        return static::getDb()
+            ->createCommand('SELECT season_number,' .
+                'count(case watched when 0 then null else watched end) watched,' .
+                'count(case when (first_aired is not null and first_aired < strftime(\'%s\', \'now\')) then 1 else null end) aired,' .
+                'count(*) total' .
+                ' FROM ' . static::tableName() .
+                ' WHERE show_id=:show' .
+                ' GROUP BY season_number',
+                [':show' => $show_id])
+            ->queryAll();
     }
 
     function getTrailerQuery() {

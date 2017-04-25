@@ -3,7 +3,7 @@
 /* @var $upcoming array */
 /* @var $uncompleted array */
 
-$this->title = 'Home';
+$this->title = Yii::t('default', 'Home');
 ?>
 
 <style type="text/css">
