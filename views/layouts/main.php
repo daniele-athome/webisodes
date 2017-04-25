@@ -38,22 +38,7 @@ AppAsset::register($this);
     <div class="container">
         <div class="row">
 
-            <div class="masthead clearfix">
-                <div class="inner">
-                    <h3 class="masthead-brand"><?=
-                        Html::img(Yii::$app->urlManager->baseUrl.'/img/logo.png', ['alt' => 'Logo','class' => 'logo']) .Yii::$app->name; ?></h3>
-
-                    <?= Nav::widget([
-                        'options' => ['class' => 'nav masthead-nav'],
-                        'encodeLabels' => false,
-                        'items' => [
-                            ['label'=>'Home', 'url'=> ['/dashboard/index']],
-                            ['label'=>'Shows', 'url'=> ['/show/index']],
-                            ['label'=>'<span class="glyphicon glyphicon-search"></span>', 'url'=>'#'],
-                        ]]
-                    ); ?>
-                </div>
-            </div>
+            <?= $this->render('_navbar') ?>
 
             <div class="inner cover">
                 <?= $content; ?>

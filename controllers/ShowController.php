@@ -15,7 +15,36 @@ class ShowController extends BaseController
         ]);
 	}
 
-	public function actionIndex()
+    public function actionStarred()
+    {
+        $query = Show::find()
+            ->andWhere('starred <> 0')
+            ->orderBy('name');
+        return $this->render('index', [
+            'dataProvider' => new yii\data\ActiveDataProvider(['query' => $query, 'pagination' => false]),
+        ]);
+    }
+
+    public function actionUncompleted()
+    {
+        $data = Show::find()
+            ->joinWith('episodes')
+            ->orderBy(['starred' => SORT_DESC, 'name' => SORT_ASC])
+            ->all();
+        $filtered = [];
+        foreach ($data as $show) {
+            /** @var $show Show */
+            if ($show->watchedCount < $show->episodesCount) {
+                $filtered[] = $show;
+            }
+        }
+
+        return $this->render('index', [
+            'dataProvider' => new yii\data\ArrayDataProvider(['allModels' => $filtered, 'pagination' => false]),
+        ]);
+    }
+
+    public function actionIndex()
 	{
 		$query = Show::find()
             ->orderBy(['starred' => SORT_DESC, 'name' => SORT_ASC]);
